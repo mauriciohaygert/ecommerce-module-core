@@ -48,7 +48,10 @@ abstract class AbstractPayment
         $newPayment->$primitive = $this->convertToPrimitivePaymentRequest();
         $newPayment->paymentMethod = $this->cammel2SnakeCase($primitive);
 
-        if ($this->getCustomer() !== null) {
+        if (
+            $this->getCustomer() !== null &&
+            $this->shouldSDKRequestHaveCustomer()
+        ) {
             $newPayment->customer = $this->getCustomer()->convertToSDKRequest();
         }
 
@@ -71,5 +74,29 @@ abstract class AbstractPayment
             $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
         }
         return implode('_', $ret);
+    }
+
+    private function shouldSDKRequestHaveCustomer()
+    {
+        if ($this->getOrder() === null) {
+            return false;
+        }
+
+        if ($this->getOrder()->getCustomer() === null) {
+            return false;
+        }
+
+        if ($this->getCustomer() === null) {
+            return false;
+        }
+
+        $orderCustomer = $this->getOrder()->getCustomer();
+        $paymentCustomer = $this->getCustomer();
+
+        if ($paymentCustomer->getEmail() === $orderCustomer->getEmail()) {
+            return false;
+        }
+
+        return true;
     }
 }
