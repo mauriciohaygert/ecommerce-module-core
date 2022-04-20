@@ -7,7 +7,7 @@ use Pagarme\Core\Kernel\Factories\LogObjectFactory;
 
 class JsonPrettyFormatter extends JsonFormatter
 {
-    public function format(array $record)
+    public function format(array $record) :String
     {
         $logObjectFactory = new LogObjectFactory();
         $logObject = $logObjectFactory->createFromArray($record['context']);
