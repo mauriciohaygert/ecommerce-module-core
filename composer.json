@@ -12,7 +12,7 @@
   "require": {
     "php": ">=7.1",
     "monolog/monolog": "*",
-    "pagarme/pagarme-php": "^5.0",
+    "pagarme/pagarme-php-sdk": "*",
     "ext-json": "*"
   },
   "require-dev": {
