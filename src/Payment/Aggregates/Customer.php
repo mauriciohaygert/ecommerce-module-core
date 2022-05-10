@@ -2,7 +2,7 @@
 
 namespace Pagarme\Core\Payment\Aggregates;
 
-use MundiAPILib\Models\CreateCustomerRequest;
+use PagarmeCoreApiLib\Models\CreateCustomerRequest;
 use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
 use Pagarme\Core\Kernel\Services\LocalizationService;
 use Pagarme\Core\Payment\Interfaces\ConvertibleToSDKRequestsInterface;
@@ -122,7 +122,7 @@ final class Customer extends AbstractEntity implements ConvertibleToSDKRequestsI
      */
     public function setDocument($document)
     {
-        $this->document = substr($document, 0, 16);
+        $this->document = $this->formatDocument($document);
 
         if (empty($this->document)) {
 
@@ -255,5 +255,15 @@ final class Customer extends AbstractEntity implements ConvertibleToSDKRequestsI
 
             throw new \Exception($message, 400);
         }
+    }
+
+    private function formatDocument($document)
+    {
+        $document = preg_replace(
+            '/[^0-9]/is', '',
+            substr($document, 0, 16)
+        );
+
+        return $document;
     }
 }
